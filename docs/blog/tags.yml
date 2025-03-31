@@ -1,0 +1,19 @@
+devops:
+  label: DevOps
+  permalink: /devops
+  description: DevOps tag description
+
+ci-cd:
+  label: CI/CD
+  permalink: /ci-cd
+  description: Continuous Integration and Continuous Delivery tag description
+
+automation:
+  label: Automation
+  permalink: /automation
+  description: Automation tag description
+
+infrastructure-as-code:
+  label: Infrastructure as Code
+  permalink: /infrastructure-as-code
+  description: Infrastructure as Code tag description
