@@ -43,6 +43,8 @@ jobs:
       run: pulumi stack init ${PULUMI_STACK} --secrets-provider passphrase
       env:
         PULUMI_CONFIG_PASSPHRASE: ""
+      continue-on-error: true
+      
     
     - name: Select Pulumi Stack
       run: pulumi stack select ${PULUMI_STACK}
