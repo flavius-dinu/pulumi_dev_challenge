@@ -1,4 +1,4 @@
-name: Deploy EC2 Instance
+name: Deploy Pulumi Infrastructure and application
 on: [push]
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

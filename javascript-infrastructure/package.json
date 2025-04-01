@@ -2,6 +2,7 @@
     "name": "javascript-infrastructure",
     "main": "index.js",
     "dependencies": {
-        "@pulumi/pulumi": "^3.0.0"
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/aws": "^4.0.0"
     }
 }
