@@ -90,6 +90,9 @@ jobs:
 
     - name: Select Pulumi Stack
       run: pulumi stack select ${PULUMI_STACK}
+    
+    - name: Set Zone
+      run: pulumi config set ${PULUMI_STACK}:zone_name ${ZONE_NAME}
 
     - name: Deploy infrastructure
       run: | 
