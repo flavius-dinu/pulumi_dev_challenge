@@ -51,3 +51,5 @@ jobs:
     - name: Destroy
       run: | 
         pulumi down --yes
+      env:
+        PULUMI_CONFIG_PASSPHRASE: ""
