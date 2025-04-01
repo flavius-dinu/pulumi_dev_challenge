@@ -53,6 +53,8 @@ jobs:
     - name: Run a plan
       run: | 
         pulumi preview
+      env:
+        PULUMI_CONFIG_PASSPHRASE: ""
 
   deploy:
     needs: setup-and-preview
@@ -90,6 +92,8 @@ jobs:
     - name: Deploy infrastructure
       run: | 
         pulumi up --yes
+      env:
+        PULUMI_CONFIG_PASSPHRASE: ""
     
     - name: Deploy application
       run: |
