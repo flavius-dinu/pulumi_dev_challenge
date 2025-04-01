@@ -1,4 +1,4 @@
-# Deploying a static website with Pulumi and Spacelift
+# Deploying a static website with Pulumi
 
 ## Static site
 
@@ -20,6 +20,14 @@ npm start
 ```
 
 This will start a local development server at http://localhost:3000.
+
+
+## The infrastructure
+I've created the same infrastructure using python and javascript, and for these two solutions, I will use different deployment options:
+- The pyhton infrastructure will be deployed using GitHub Actions
+- The javascript infrastructure will be deployed using Spacelift
+
+
 
 
 ## Create the State Bucket
@@ -81,3 +89,6 @@ After you create the role, select it, and copy the ARN. We are now ready to go b
 
 
 
+
+
+Ensure you use the us-east-1 region, as CloudFront only accepts ACM certificates from us-east-1.

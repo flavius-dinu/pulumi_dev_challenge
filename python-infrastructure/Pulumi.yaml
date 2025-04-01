@@ -9,4 +9,3 @@ config:
   pulumi:tags:
     value:
       pulumi:template: python
-  aws:region: eu-west-1
