@@ -1,0 +1,11 @@
+name: javascript-infrastructure
+description: A minimal JavaScript Pulumi program
+runtime:
+  name: nodejs
+  options:
+    typescript: false
+    packagemanager: npm
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: javascript

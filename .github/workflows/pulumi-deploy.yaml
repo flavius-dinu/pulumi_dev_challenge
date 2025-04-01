@@ -1,0 +1,83 @@
+name: Deploy EC2 Instance
+on: [push]
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    AWS_REGION: ${{ secrets.AWS_REGION }}  
+    PULUMI_STACK: deploy-static-site
+    ZONE_NAME: ${{ secrets.ZONE_NAME }}
+    STATE_BUCKET_NAME: ${{ secrets.STATE_BUCKET_NAME }}
+
+
+jobs:
+  setup-and-preview:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./python-infrastructure
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        pip install pulumi pulumi_aws
+    
+    - name: Login to S3 for state management
+      run: |
+        pulumi login s3://{STATE_BUCKET_NAME}
+    
+    - name: Select or Create Pulumi Stack
+      run: pulumi stack init ${PULUMI_STACK}
+      continue-on-error: true
+    
+    - name: Select Pulumi Stack
+      run: pulumi stack select ${PULUMI_STACK}
+    
+    - name: Set Zone
+      run: pulumi config set ${PULUMI_STACK}:zone_name ${ZONE_NAME}
+    
+    - name: Run a plan
+      run: | 
+        pulumi preview
+
+  deploy:
+    needs: setup-and-preview
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./python-infrastructure
+    environment: production
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install pulumi pulumi_aws
+
+    - name: Login to S3 for state management
+      run: |
+        pulumi login s3://{STATE_BUCKET_NAME}
+
+    - name: Select Pulumi Stack
+      run: pulumi stack select ${PULUMI_STACK}
+
+    - name: Deploy infrastructure
+      run: | 
+        pulumi up --yes
+    
+    - name: Deploy application
+      run: |
+        sudo apt-get install -y nodejs npm
+        npm run build ../docs/
+        aws s3 sync ../docs/build/ s3://docs.${ZONE_NAME}/

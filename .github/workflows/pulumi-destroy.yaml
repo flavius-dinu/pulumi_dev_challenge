@@ -1,0 +1,45 @@
+name: Destroy EC2 Instance
+on: workflow_dispatch
+env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    AWS_REGION: ${{ secrets.AWS_REGION }}  
+    PULUMI_STACK: deploy-static-site
+    ZONE_NAME: ${{ secrets.ZONE_NAME }}
+    STATE_BUCKET_NAME: ${{ secrets.STATE_BUCKET_NAME }}
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./python-infrastructure
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install pulumi pulumi_aws
+
+    - name: Login to S3 for state management
+      run: |
+        pulumi login s3://fd-pulumi-state-backend
+    
+    - name: Set Zone
+      run: pulumi config set ${PULUMI_STACK}:zone_name ${ZONE_NAME}
+    
+    - name: Clear bucket
+      run:
+        aws s3 rm s3://docs.${ZONE_NAME} --recursive
+
+    - name: Select Pulumi Stack
+      run: pulumi stack select ${PULUMI_STACK}
+
+    - name: Destroy
+      run: | 
+        pulumi down --yes
