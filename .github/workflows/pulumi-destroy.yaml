@@ -25,10 +25,17 @@ jobs:
     - name: Install dependencies
       run: |
         pip install pulumi pulumi_aws
+    
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${AWS_ACCESS_KEY_ID}
+        aws-secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+        aws-region: ${AWS_REGION}
 
     - name: Login to S3 for state management
       run: |
-        pulumi login s3://fd-pulumi-state-backend
+        pulumi login s3://${STATE_BUCKET_NAME}
     
     - name: Set Zone
       run: pulumi config set ${PULUMI_STACK}:zone_name ${ZONE_NAME}
