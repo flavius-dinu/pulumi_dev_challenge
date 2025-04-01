@@ -8,8 +8,8 @@ const zoneName = config.require("zone_name");
 
 const zone = aws.route53.getZone({ name: zoneName });
 
-const docsBucket = new aws.s3.Bucket(`docs.${zoneName}`, {
-    bucket: `docs.${zoneName}`,
+const docsjsBucket = new aws.s3.Bucket(`docsjs.${zoneName}`, {
+    bucket: `docsjs.${zoneName}`,
     tags: {
         "Environment": "dev",
         "Project": "static-site",
@@ -20,13 +20,13 @@ const docsBucket = new aws.s3.Bucket(`docs.${zoneName}`, {
     },
 });
 
-const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity("docs-oai", {
-    comment: `OAI for docs.${zoneName}`
+const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity("docsjs-oai", {
+    comment: `OAI for docsjs.${zoneName}`
 });
 
-const bucketPolicy = new aws.s3.BucketPolicy("docs-bucket-policy", {
-    bucket: docsBucket.id,
-    policy: pulumi.all([docsBucket.arn, originAccessIdentity.iamArn])
+const bucketPolicy = new aws.s3.BucketPolicy("docsjs-bucket-policy", {
+    bucket: docsjsBucket.id,
+    policy: pulumi.all([docsjsBucket.arn, originAccessIdentity.iamArn])
         .apply(([bucketArn, oaiIamArn]) => JSON.stringify({
             Version: "2012-10-17",
             Statement: [{
@@ -38,8 +38,8 @@ const bucketPolicy = new aws.s3.BucketPolicy("docs-bucket-policy", {
         }))
 });
 
-const certificate = new aws.acm.Certificate("docs-cert", {
-    domainName: `docs.${zoneName}`,
+const certificate = new aws.acm.Certificate("docsjs-cert", {
+    domainName: `docsjs.${zoneName}`,
     validationMethod: "DNS",
     tags: {
         "Environment": "dev",
@@ -47,7 +47,7 @@ const certificate = new aws.acm.Certificate("docs-cert", {
     },
 });
 
-const validationRecord = new aws.route53.Record("docs-cert-validation", {
+const validationRecord = new aws.route53.Record("docsjs-cert-validation", {
     zoneId: zone.then(z => z.zoneId),
     name: certificate.domainValidationOptions[0].resourceRecordName,
     type: certificate.domainValidationOptions[0].resourceRecordType,
@@ -55,15 +55,15 @@ const validationRecord = new aws.route53.Record("docs-cert-validation", {
     ttl: 60,
 });
 
-const certificateValidation = new aws.acm.CertificateValidation("docs-cert-validation", {
+const certificateValidation = new aws.acm.CertificateValidation("docsjs-cert-validation", {
     certificateArn: certificate.arn,
     validationRecordFqdns: [validationRecord.fqdn],
 });
 
-const distribution = new aws.cloudfront.Distribution("docs-distribution", {
+const distribution = new aws.cloudfront.Distribution("docsjs-distribution", {
     origins: [{
-        domainName: docsBucket.bucketRegionalDomainName,
-        originId: `S3-docs.${zoneName}`,
+        domainName: docsjsBucket.bucketRegionalDomainName,
+        originId: `S3-docsjs.${zoneName}`,
         s3OriginConfig: {
             originAccessIdentity: originAccessIdentity.cloudfrontAccessIdentityPath,
         },
@@ -71,11 +71,11 @@ const distribution = new aws.cloudfront.Distribution("docs-distribution", {
     enabled: true,
     isIpv6Enabled: true,
     defaultRootObject: "index.html",
-    aliases: [`docs.${zoneName}`],
+    aliases: [`docsjs.${zoneName}`],
     defaultCacheBehavior: {
         allowedMethods: ["GET", "HEAD", "OPTIONS"],
         cachedMethods: ["GET", "HEAD"],
-        targetOriginId: `S3-docs.${zoneName}`,
+        targetOriginId: `S3-docsjs.${zoneName}`,
         forwardedValues: {
             queryString: false,
             cookies: {
@@ -104,8 +104,8 @@ const distribution = new aws.cloudfront.Distribution("docs-distribution", {
     },
 });
 
-const docsRecord = new aws.route53.Record(`docs.${zoneName}`, {
-    name: `docs.${zoneName}`,
+const docsjsRecord = new aws.route53.Record(`docsjs.${zoneName}`, {
+    name: `docsjs.${zoneName}`,
     zoneId: zone.then(z => z.zoneId),
     type: "A",
     aliases: [{
@@ -115,6 +115,6 @@ const docsRecord = new aws.route53.Record(`docs.${zoneName}`, {
     }],
 });
 
-exports.websiteUrl = pulumi.interpolate`https://${docsRecord.name}`;
+exports.websiteUrl = pulumi.interpolate`https://${docsjsRecord.name}`;
 exports.cloudfrontDomain = distribution.domainName;
-exports.bucketName = docsBucket.id;
+exports.bucketName = docsjsBucket.id;

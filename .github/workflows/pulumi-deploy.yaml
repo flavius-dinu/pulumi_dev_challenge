@@ -8,7 +8,6 @@ env:
     ZONE_NAME: ${{ secrets.ZONE_NAME }}
     STATE_BUCKET_NAME: ${{ secrets.STATE_BUCKET_NAME }}
 
-
 jobs:
   setup-and-preview:
     runs-on: ubuntu-latest
