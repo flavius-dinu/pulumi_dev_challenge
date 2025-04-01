@@ -1,8 +1,8 @@
 # Deploying a static website with Pulumi
 
 The aim of this project is to showcase how to deploy a static website built using Docusaurus by using:
-- Pulumi and GitHub Actions
-- Pulumi and Spacelift
+- Pulumi (python) and GitHub Actions
+- Pulumi (javascript) and Spacelift
 
 Repo structure explained:
 - .github --  GitHub Actions workflows for deploying the Pulumi python code
@@ -30,7 +30,6 @@ This delegates DNS authority to Route53, allowing you to manage your domain's DN
 ### How to create the State Bucket
 
 To create a state bucket in your AWS account, follow these steps:
-
 
 1. Navigate to the S3.
 2. Click on the `Create bucket` button and enter a unique name for your bucket (e.g., `my-pulumi-state-bucket`).
@@ -117,39 +116,33 @@ Example promotion after the `setup-and-preview` job is done:
 ![Promotion](images/promotion.png)
 
 The `pulumi-destroy` workflow has a single job that removes everything from your infrastructure.
-
+Example destroy run:
+![Destroy infrastructure](images/destroy.png)
 
 
 ### Set up a VCS integration in Spacelift
 Go to source code and select:
 
+![Create VCS Integration](images/spacelift_vcs.png)
 
-![Create VCS Integration](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/jescnb7s2byaxcf2i49t.png)
 
+Next, set it up via the Wizard and follow the steps from there. In the end you will result in:
 
-Next, set it up via the Wizard:
-
-![VCS Wizard Set Up](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/qhm92syb712tyndnzloo.png)
-
-Follow the steps from there and in the end you will result in:
-
-![Created VCS Integration](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fwgzdiunzyp9754ombyo.png)
+![Wizard](images/spacelift_vcs_integration.png)
 
 Click on install application and then install it in GitHub:
-![Install GitHub Application](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/t93lmcrqvvv1w010vu8r.png)
+![Install GitHub Application](images/spacelift_github_app.png)
 
 
 ### Set up a Cloud Integration in Spacelift
 
 To easily leverage dynamic credentials in Spacelift, we can take advantage of Cloud Integrations. To build this native integration, you would need to go to Cloud Integrations -> Set up Cloud Integration -> AWS:
 
-
-![Spacelift Cloud Integration](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/svoo9y51r9ftjarvzyr3.png)
+![Spacelift Cloud Integration](images/spacelift_cloud_integration.png)
 
 In parallel, go to AWS and create a new role by selecting a custom trust policy:
 
-
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/5hamqqilqd16xlze3d54.png)
+![AWS Role](images/aws_role.png)
 
 Next, add the required permissions for creating the Pulumi resources:
 - s3:*
@@ -161,12 +154,51 @@ Of course, you could be more granular with the permissions, but because this is 
 
 In the end, add a name for your role, and an optional description as presented here:
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/zuvwmawndx069agqzgca.png)
+![AWS role name](images/aws_role_name.png)
 
 After you create the role, select it, and copy the ARN. We are now ready to go back to our Spacelift account and continue the creation of the cloud integration, by pasting the ARN inside the configuration form. In the end, it should look like this:
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/d9pztd143clbcie7zhbp.png)
-
+![Spacelift CLoud Integration Built](images/spacelift_cloud_integration_built.png)
 
 
 ### Deploying with Spacelift
+In your Spacelift account, go to Stacks and select `Create Stack`. 
+
+Add a name for your stack and an optional description:
+![Stack 1](images/stack1.png)
+
+Next, select your repository and add the folder from which you will run pulumi:
+![Stack 2](images/stack2.png)
+
+Now, select `pulumi` as your vendor and fill in the data accordingly:
+![Stack 3](images/stack3.png)
+
+In the next step, add this runner image: `public.ecr.aws/spacelift/runner-pulumi-javascript:latest`
+![Stack 4](images/stack4.png)
+
+Now we need to add some lifecycle hooks.
+Before plan hooks:
+- `npm install`
+- `pulumi config set javascript-infrastructure:zone_name $ZONE_NAME`
+![Stack 5](images/stack5.png)
+
+After apply hooks:
+- `cd ../docs`
+- `npm install`
+- `npm run build`
+- `aws s3 sync ./build/ s3://docsjs.$ZONE_NAME/`
+![Stack 6](images/stack6.png)
+
+We will now attached the previosly created cloud integration:
+![Stack 7](images/stack7.png)
+
+We can skip to summary and confirm everything. Before deploying the code, we need to add some environment variables:
+
+Go to the stack's environment tab add these two environment variables:
+- `AWS_REGION`
+- `ZONE_NAME`
+![Stack 8](images/stack8.png)
+
+Now we can trigger a run and deploy the code. As soon as the code finishes we can head out to the resources tab and see all the resources deployed. By clicking on any one of the resources we will see details about it:
+![Stack 9](images/stack9.png)
+
