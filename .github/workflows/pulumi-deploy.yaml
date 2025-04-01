@@ -40,8 +40,9 @@ jobs:
         pulumi login s3://${STATE_BUCKET_NAME}
     
     - name: Select or Create Pulumi Stack
-      run: pulumi stack init ${PULUMI_STACK}
-      continue-on-error: true
+      run: pulumi stack init ${PULUMI_STACK} --secrets-provider passphrase
+      env:
+        PULUMI_CONFIG_PASSPHRASE: ""
     
     - name: Select Pulumi Stack
       run: pulumi stack select ${PULUMI_STACK}
