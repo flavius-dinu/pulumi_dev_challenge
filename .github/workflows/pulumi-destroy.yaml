@@ -3,7 +3,7 @@ on: workflow_dispatch
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    AWS_REGION: ${{ secrets.AWS_REGION }}  
+    AWS_REGION: ${{ secrets.AWS_REGION }}
     PULUMI_STACK: deploy-static-site
     ZONE_NAME: ${{ secrets.ZONE_NAME }}
     STATE_BUCKET_NAME: ${{ secrets.STATE_BUCKET_NAME }}
@@ -29,9 +29,9 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${AWS_ACCESS_KEY_ID}
-        aws-secret-access-key: ${AWS_SECRET_ACCESS_KEY}
-        aws-region: ${AWS_REGION}
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to S3 for state management
       run: |
