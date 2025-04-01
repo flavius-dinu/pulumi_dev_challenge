@@ -102,5 +102,6 @@ jobs:
     - name: Deploy application
       run: |
         sudo apt-get install -y nodejs npm
-        npm run build ../docs/
-        aws s3 sync ../docs/build/ s3://docs.${ZONE_NAME}/
+        npm run build
+        aws s3 sync ./docs/build/ s3://docs.${ZONE_NAME}/
+      working-directory: ./docs
