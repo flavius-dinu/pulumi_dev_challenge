@@ -202,3 +202,17 @@ Go to the stack's environment tab add these two environment variables:
 
 Now we can trigger a run and deploy the code. As soon as the code finishes we can head out to the resources tab and see all the resources deployed. By clicking on any one of the resources we will see details about it:
 ![Stack 9](images/stack9.png)
+
+
+## Next Steps
+
+This project demonstrates how to deploy a static website using Pulumi with two different approaches: GitHub Actions (Python) and Spacelift (JavaScript).
+
+To extend this project further, consider:
+- Implementing policy as code
+- Leveraging drift detection 
+- Include security vulnerability scanning
+- Build the equivalents in Azure/GCP/Oracle Cloud
+
+
+If you have any questions or suggestions, feel free to open an issue or contribute to the repository. Happy coding! 🚀
