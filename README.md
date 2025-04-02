@@ -119,8 +119,9 @@ The `pulumi-destroy` workflow has a single job that removes everything from your
 Example destroy run:
 ![Destroy infrastructure](images/destroy.png)
 
+### Spacelift configuration
 
-### Set up a VCS integration in Spacelift
+#### Set up a VCS integration in Spacelift
 Go to source code and select:
 
 ![Create VCS Integration](images/spacelift_vcs.png)
@@ -134,7 +135,7 @@ Click on install application and then install it in GitHub:
 ![Install GitHub Application](images/spacelift_github_app.png)
 
 
-### Set up a Cloud Integration in Spacelift
+#### Set up a Cloud Integration in Spacelift
 
 To easily leverage dynamic credentials in Spacelift, we can take advantage of Cloud Integrations. To build this native integration, you would need to go to Cloud Integrations -> Set up Cloud Integration -> AWS:
 
@@ -161,7 +162,7 @@ After you create the role, select it, and copy the ARN. We are now ready to go b
 ![Spacelift CLoud Integration Built](images/spacelift_cloud_integration_built.png)
 
 
-### Deploying with Spacelift
+#### Deploying with Spacelift
 In your Spacelift account, go to Stacks and select `Create Stack`. 
 
 Add a name for your stack and an optional description:
@@ -201,4 +202,3 @@ Go to the stack's environment tab add these two environment variables:
 
 Now we can trigger a run and deploy the code. As soon as the code finishes we can head out to the resources tab and see all the resources deployed. By clicking on any one of the resources we will see details about it:
 ![Stack 9](images/stack9.png)
-
