@@ -11,6 +11,8 @@ Repo structure explained:
 - python-infrastructure -- Pulumi python infrastructure that will be used by Spacelift to deploy the infrastructure and the application
 - images -- Images used throughout the documentation
 
+To use this project, feel free to fork the repository and follow the instructions below.
+
 ## Prerequisites
 - An AWS Route53 hosted zone for your domain
 - An AWS S3 bucket for Pulumi state hosting
