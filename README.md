@@ -93,6 +93,9 @@ There are two GitHub Actions workflows available:
 - one for the actual deployment of the Pulumi python code and the application called `pulumi-deploy` running on push 
 - another one for removing the application from S3 and destroying the infrastructure called `pulumi-destroy` running manually
 
+To access the workflows, we will use the Actions tab from inside the repository:
+![Workflows](/images/gha.png)
+
 The workflows use secrets for AWS credentials and configuration values and stores Pulumi state in S3.
 
 These are all the GitHub secrets you have to add.
@@ -103,6 +106,8 @@ These are all the GitHub secrets you have to add.
 - ZONE_NAME
 
 For GitHub Actions, I've used static credentials, but for the Spacelift deployment we will leverage dynamic ones.
+
+To add the secrets, head out to your repository settings, select `Secrets and variables` and then choose `Actions`:
 
 ![GitHub Secrets](images/github_secrets.png)
 
