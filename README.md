@@ -9,6 +9,7 @@ Repo structure explained:
 - docs -- Documentation website built with Docusaurus, that can easily host your blogs and tutorials
 - javascript-infrastructure -- Pulumi javascript infrastructure that will be used by Spacelift to deploy the infrastructure and the application
 - python-infrastructure -- Pulumi python infrastructure that will be used by Spacelift to deploy the infrastructure and the application
+- images -- Images used throughout the documentation
 
 ## Prerequisites
 - An AWS Route53 hosted zone for your domain
