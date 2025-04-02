@@ -121,6 +121,9 @@ Example destroy run:
 ![Destroy infrastructure](images/destroy.png)
 
 ### Spacelift configuration
+Create a Spacelift account by following the information from [here](https://spacelift.io/free-trial).
+
+If you want to see more information on how to do that, check out this [article](https://spacelift.io/blog/what-is-spacelift#getting-started-with-spacelift).
 
 #### Set up a VCS integration in Spacelift
 Go to source code and select:
