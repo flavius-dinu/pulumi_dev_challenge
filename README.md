@@ -201,7 +201,7 @@ After apply hooks:
 - `aws s3 sync ./build/ s3://docsjs.$ZONE_NAME/`
 ![Stack 6](images/stack6.png)
 
-We will now attached the previosly created cloud integration:
+We will now attach the previously created cloud integration:
 ![Stack 7](images/stack7.png)
 
 We can skip to summary and confirm everything. Before deploying the code, we need to add some environment variables:
@@ -222,8 +222,11 @@ This project demonstrates how to deploy a static website using Pulumi with two d
 To extend this project further, consider:
 - Implementing policy as code
 - Leveraging drift detection 
-- Include security vulnerability scanning
-- Build the equivalents in Azure/GCP/Oracle Cloud
+- Including security vulnerability scanning
+- Building the equivalents in Azure/GCP/Oracle Cloud
+- Using other deployment mechanisms such as Pulumi Cloud, GitLab CI/CD, or even Jenkins
 
 
-If you have any questions or suggestions, feel free to open an issue or contribute to the repository. Happy coding! 🚀
+If you have any questions or suggestions, feel free to open an issue or contribute to the repository. 
+
+Happy coding! 🚀
